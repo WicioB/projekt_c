@@ -1,6 +1,7 @@
 #ifndef GRAPH_H
 #define GRAPH_H
-
+#define WIDTH 1000
+#define HEIGHT 1000
 typedef struct {
     int id;
     double x,y,dx,dy;

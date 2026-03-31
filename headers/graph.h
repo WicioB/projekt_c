@@ -22,4 +22,4 @@ Graph* create_graph();
 void free_graph(Graph *g);
 int load_file(Graph *g, char *file);
 int save_file(Graph *g, char *file, char *filetype);
-#endif
+#endif  

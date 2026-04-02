@@ -32,5 +32,22 @@ int new_edge(Graph *g, int id)
 }
 int load_file(Graph *g, char *file)
 {
-    
+    FILE *in = fopen(file, "r");
+    if(!in)
+    {
+        return EXIT_FAILURE;
+    }
+    char name[100];
+    int a,b;
+    double weight;
+    while(fscanf(in, "%s %d %d %lf", name, &a, &b, &weight)!=EOF)
+    {
+        int a_id = new_edge(g, a);
+        int b_id = new_edge(g, b);
+        g->edges[g->number_of_edges].x = a_id;
+        g->edges[g->number_of_edges].y = b_id;
+        g->edges[g->number_of_edges++].weight = weight;
+    }
+    fclose(in);
+    return 0;
 }

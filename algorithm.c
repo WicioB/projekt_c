@@ -58,10 +58,14 @@ void fruchterman(Graph *g, int count)
                 double limited = fmin(distance, t);
                 v->x += (v->dx / distance) * limited;
                 v->y += (v->dy / distance) * limited;
-                v->x = fmin(WIDTH / 2.0, fmax(-WIDTH / 2.0, v->x));
-                v->y = fmin(HEIGHT / 2.0, fmax(-HEIGHT / 2.0, v->y));
             }
+            v->x = fmin(WIDTH, fmax(0.0, v->x));
+            v->y = fmin(HEIGHT, fmax(0.0, v->y));
         }
         t*=0.95;
     }
+}
+void tutte(Graph *g, int counter)
+{
+    
 }

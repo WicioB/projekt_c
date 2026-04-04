@@ -1,7 +1,7 @@
 #ifndef GRAPH_H
 #define GRAPH_H
-#define WIDTH 1000
-#define HEIGHT 1000
+#define WIDTH 10
+#define HEIGHT 10
 typedef struct {
     int id;
     double x,y,dx,dy;
@@ -22,5 +22,5 @@ typedef struct{
 Graph* create_graph();
 void free_graph(Graph *g);
 int load_file(Graph *g, char *file);
-int save_file(Graph *g, char *file, char *filetype);
+void save_file(Graph *g, char *file, char *filetype);
 #endif  

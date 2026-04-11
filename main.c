@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
 #include "headers/algorithm.h"
 #include "headers/graph.h"
 #include <time.h>
@@ -12,6 +11,8 @@ int main(int argc, char *argv[])
     char *output = "out";
     char *format = "txt";
     int number = 0;
+    int seed = 0;
+    int has_seed = 0;
 
     for (int i = 1; i < argc; i++)
     {
@@ -30,6 +31,11 @@ int main(int argc, char *argv[])
         else if (strcmp(argv[i], "-f") == 0 && i + 1 < argc) 
         {
             format = argv[++i];
+        }
+        else if (strcmp(argv[i], "-s") == 0 && i + 1 < argc)
+        {
+            seed = atoi(argv[++i]);
+            has_seed = 1;
         }
     }
 
@@ -51,7 +57,15 @@ int main(int argc, char *argv[])
         return GRAPH_ERR_SAVE;
     }
 
-    srand(time(NULL));
+    if (has_seed)
+    {
+        srand(seed);
+    }
+    else
+    {
+        srand(time(NULL));
+    }
+
     Graph *g = create_graph();
 
     int error_line = 0;

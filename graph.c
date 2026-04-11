@@ -111,7 +111,7 @@ int save_file(Graph *g, char *file, char *filetype)
 
         for(int i=0;i< g->number_of_vertices;i++)
         {
-            if (fprintf(out, "%d %.2f %.2f \n", g->vertices[i].id, g->vertices[i].x, g->vertices[i].y) < 0)
+            if (fprintf(out, "%d %.17g %.17g \n", g->vertices[i].id, g->vertices[i].x, g->vertices[i].y) < 0)
             {
                 fclose(out);
                 return GRAPH_ERR_SAVE;

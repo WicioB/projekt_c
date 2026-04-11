@@ -1,5 +1,8 @@
 #include "headers/algorithm.h"
 #include <math.h>
+#include <stdlib.h>
+
+#define PI 3.14159265358979323846
 
 double vector_length(double a, double b)
 {
@@ -68,7 +71,102 @@ void fruchterman(Graph *g, int count)
     }
 }
 
-void tutte(Graph *g, int counter)
+void tutte(Graph *g, int iterations)
 {
-    
+    if (!g || g->number_of_vertices <= 0)
+    {
+        return;
+    }
+
+    int vertex_count = g->number_of_vertices;
+    if (vertex_count == 1)
+    {
+        g->vertices[0].x = WIDTH / 2.0;
+        g->vertices[0].y = HEIGHT / 2.0;
+        return;
+    }
+
+    int *is_fixed = calloc(vertex_count, sizeof(int));
+    if (!is_fixed)
+    {
+        return;
+    }
+
+    // Arbitrary fixing the first three vertices in a triangle for simplicity
+    int boundary_count = vertex_count < 3 ? vertex_count : 3;
+    for (int i = 0; i < boundary_count; i++)
+    {
+        is_fixed[i] = 1;
+    }
+
+    double center_x = WIDTH / 2.0;
+    double center_y = HEIGHT / 2.0;
+    double radius = 0.45 * fmin(WIDTH, HEIGHT); // 5% margin from the edges
+
+    for (int i = 0; i < boundary_count; i++)
+    {
+        double angle = 2.0 * PI * (double)i / (double)boundary_count - PI / 2.0;
+        int v = i;
+        g->vertices[v].x = center_x + radius * cos(angle);
+        g->vertices[v].y = center_y + radius * sin(angle);
+    }
+
+    for (int i = 0; i < vertex_count; i++)
+    {
+        if (!is_fixed[i])
+        {
+            g->vertices[i].x = center_x;
+            g->vertices[i].y = center_y;
+        }
+    }
+    for (int it = 0; it < iterations; it++)
+    {
+        // Storing the graph as an adjacency list would be more efficient for this part
+        for (int v = 0; v < vertex_count; v++)
+        {
+            if (is_fixed[v])
+            {
+                continue;
+            }
+
+            double sum_x = 0.0;
+            double sum_y = 0.0;
+            double sum_w = 0.0;
+
+            for (int e = 0; e < g->number_of_edges; e++)
+            {
+                int a = g->edges[e].x;
+                int b = g->edges[e].y;
+                int u = -1;
+
+                if (a == v)
+                {
+                    u = b;
+                }
+                else if (b == v)
+                {
+                    u = a;
+                }
+
+                if (u >= 0 && u < vertex_count)
+                {
+                    double w = g->edges[e].weight;
+                    sum_x += w * g->vertices[u].x;
+                    sum_y += w * g->vertices[u].y;
+                    sum_w += w;
+                }
+            }
+
+            if (sum_w > 0.0)
+            {
+                double new_x = sum_x / sum_w;
+                double new_y = sum_y / sum_w;
+
+                g->vertices[v].x = new_x;
+                g->vertices[v].y = new_y;
+            }
+        }
+    }
+
+    free(is_fixed);
 }

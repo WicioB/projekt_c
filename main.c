@@ -1,15 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 #include "headers/algorithm.h"
 #include "headers/graph.h"
 #include <time.h>
+
 int main(int argc, char *argv[]) 
 {
-    char *input;
-    char *output ="out";
-    char *format ="txt";
+    char *input = NULL;
+    char *output = "out";
+    char *format = "txt";
     int number = 0;
+
     for (int i = 1; i < argc; i++)
     {
         if (strcmp(argv[i], "-n") == 0 && i + 1 < argc) 
@@ -29,25 +32,59 @@ int main(int argc, char *argv[])
             format = argv[++i];
         }
     }
-    if (input == NULL || number == 0) 
+
+    if (input == NULL)
     {
-        printf("Zla liczba argumentow.\n");
-        return EXIT_FAILURE;
+        fprintf(stderr, "Error: Nie znaleziono pliku: <ścieżka>\n");
+        return GRAPH_ERR_INPUT_MISSING;
     }
+
+    if (number != 1 && number != 2)
+    {
+        fprintf(stderr, "Error: Nieznany algorytm: %d. Dostępne: 1,2\n", number);
+        return GRAPH_ERR_UNKNOWN_ALGORITHM;
+    }
+
+    if (strcmp(format, "txt") != 0 && strcmp(format, "bin") != 0)
+    {
+        fprintf(stderr, "Error: Nie można zapisać pliku: %s\n", output);
+        return GRAPH_ERR_SAVE;
+    }
+
     srand(time(NULL));
     Graph *g = create_graph();
-    if (load_file(g, input) != 0) 
+
+    int error_line = 0;
+    int load_status = load_file(g, input, &error_line);
+    if (load_status == GRAPH_ERR_INPUT_MISSING)
     {
-        printf("Zly plik %s\n", input);
-        return 1;
+        fprintf(stderr, "Error: Nie znaleziono pliku: %s\n", input);
+        free_graph(g);
+        return GRAPH_ERR_INPUT_MISSING;
     }
+    if (load_status == GRAPH_ERR_FORMAT)
+    {
+        fprintf(stderr, "Error: Nieprawidłowy format w linii %d\n", error_line);
+        free_graph(g);
+        return GRAPH_ERR_FORMAT;
+    }
+
     if (number == 1) 
     {
         fruchterman(g, 500);
-    } else 
+    }
+    else 
     {
         tutte(g, 500);
     }
-    save_file(g, output, format);
+
+    if (save_file(g, output, format) != GRAPH_OK)
+    {
+        fprintf(stderr, "Error: Nie można zapisać pliku: %s\n", output);
+        free_graph(g);
+        return GRAPH_ERR_SAVE;
+    }
+
     free_graph(g);
+    return GRAPH_OK;
 }

@@ -1,9 +1,11 @@
 #include "headers/algorithm.h"
 #include <math.h>
+
 double vector_length(double a, double b)
 {
     return sqrt((a*a) + (b*b));
 }
+
 void fruchterman(Graph *g, int count)
 {
     double area = WIDTH * HEIGHT;
@@ -65,6 +67,7 @@ void fruchterman(Graph *g, int count)
         t*=0.95;
     }
 }
+
 void tutte(Graph *g, int counter)
 {
     

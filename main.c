@@ -5,6 +5,37 @@
 #include "headers/graph.h"
 #include <time.h>
 
+void print_help() {
+    const char *help_text = 
+        "Uzycie: graph -n <sciezka> -a <numer> [opcje]\n\n"
+        "Opis:\n"
+        "  Aplikacja wyznacza wspolrzedne wierzcholkow grafow planarnych.\n"
+        "  Wykorzystuje algorytm Fruchtermana-Reingolda (1) oraz Twierdzenie Tutte'a (2).\n\n"
+        "Opcje wymagane:\n"
+        "  -n <sciezka>  Sciezka do pliku wejsciowego z lista krawedzi\n"
+        "  -a <numer>    Wybor algorytmu: \n"
+        "                  1 = Algorytm Fruchtermana-Reingolda\n"
+        "                  2 = Twierdzenie Tutte'a o sprezynach\n\n"
+        "Opcje dodatkowe:\n"
+        "  -o <nazwa>    Nazwa pliku wyjsciowego (domyslnie: \"out\")\n"
+        "  -f <format>   Format pliku wyjsciowego: \"txt\" lub \"bin\" (domyslnie: \"txt\")\n"
+        "  -s <seed>     Ziarno generatora liczb losowych (dla powtarzalnosci wynikow)\n"
+        "  -h            Wyswietla dokumentacje\n\n"
+        "Format pliku wejsciowego (txt):\n"
+        "  <nazwa_krawedzi> <wierzcholek_A> <wierzcholek_B> <waga_krawedzi>\n\n"
+        "Przyklady:\n"
+        "  ./graph -n dane.csv -a 1 -o out_file -f txt\n"
+        "  ./graph -n dane.csv -a 2 -s 42\n\n"
+        "Kody wyjscia:\n"
+        "  0 - Sukces\n"
+        "  1 - Brak/blad pliku wejsciowego\n"
+        "  2 - Blad formatu danych\n"
+        "  3 - Blad zapisu pliku wyjsciowego\n"
+        "  4 - Nieprawidlowy/nieznany algorytm\n";
+
+    printf("%s", help_text);
+}
+
 int main(int argc, char *argv[]) 
 {
     char *input = NULL;
@@ -16,7 +47,12 @@ int main(int argc, char *argv[])
 
     for (int i = 1; i < argc; i++)
     {
-        if (strcmp(argv[i], "-n") == 0 && i + 1 < argc) 
+        if (strcmp(argv[i], "-h") == 0)
+        {
+            print_help();
+            return 0;
+        }
+        else if (strcmp(argv[i], "-n") == 0 && i + 1 < argc) 
         {
             input = argv[++i];
         } 

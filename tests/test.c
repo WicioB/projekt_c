@@ -42,10 +42,10 @@ int main(void)
     printf("\n=== Running Tests ===\n\n");
 
     test_count++;
-    printf("Test 1: Simple graph with TXT output ... ");
-    exit_code = run_program("data/simple.txt", "out/simple_out", "txt", 1);
-    int lines = file_lines("out/simple_out");
-    if (exit_code == 0 && file_exists("out/simple_out") && lines == 3)
+    printf("Test 1: Fruchterman (1) with TXT output ... ");
+    exit_code = run_program("data/simple.txt", "out/fruchterman_out", "txt", 1);
+    int lines = file_lines("out/fruchterman_out");
+    if (exit_code == 0 && file_exists("out/fruchterman_out") && lines == 3)
     {
         printf("OK\n");
         test_pass++;
@@ -54,7 +54,19 @@ int main(void)
         printf("FAIL\n");
 
     test_count++;
-    printf("Test 2: Simple graph with BIN output ... ");
+    printf("Test 2: Tutte (2) with TXT output ... ");
+    exit_code = run_program("data/simple.txt", "out/tutte_out", "txt", 2);
+    lines = file_lines("out/tutte_out");
+    if (exit_code == 0 && file_exists("out/tutte_out") && lines == 3)
+    {
+        printf("OK\n");
+        test_pass++;
+    }
+    else
+        printf("FAIL\n");
+
+    test_count++;
+    printf("Test 3: Fruchterman with BIN output ... ");
     exit_code = run_program("data/simple.txt", "out/simple_bin", "bin", 1);
     if (exit_code == 0 && file_exists("out/simple_bin"))
     {
@@ -65,7 +77,7 @@ int main(void)
         printf("FAIL\n");
 
     test_count++;
-    printf("Test 3: Complex graph with TXT output ... ");
+    printf("Test 4: Complex graph with Tutte ... ");
     exit_code = run_program("data/complex.txt", "out/complex_out", "txt", 2);
     if (exit_code == 0 && file_exists("out/complex_out"))
     {
@@ -76,7 +88,7 @@ int main(void)
         printf("FAIL\n");
 
     test_count++;
-    printf("Test 4: Missing input file ... ");
+    printf("Test 5: Missing input file ... ");
     exit_code = run_program("data/nonexistent.txt", "out/dummy", "txt", 1);
     if (exit_code == 1)
     {
@@ -87,7 +99,7 @@ int main(void)
         printf("FAIL (got code %d)\n", exit_code);
 
     test_count++;
-    printf("Test 5: Bad format ... ");
+    printf("Test 6: Bad format ... ");
     exit_code = run_program("data/bad_format.txt", "out/dummy", "txt", 1);
     if (exit_code == 2)
     {
@@ -98,7 +110,7 @@ int main(void)
         printf("FAIL (got code %d)\n", exit_code);
 
     test_count++;
-    printf("Test 6: Invalid algorithm ... ");
+    printf("Test 7: Invalid algorithm ... ");
     char cmd[512];
     snprintf(cmd, sizeof(cmd),
              "../graph -n data/simple.txt -a 99 -o out/dummy -f txt -s 42 > /dev/null 2>&1");

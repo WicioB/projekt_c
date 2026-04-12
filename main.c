@@ -18,6 +18,7 @@ void print_help() {
         "                  2 = Twierdzenie Tutte'a o sprezynach\n\n"
         "Opcje dodatkowe:\n"
         "  -o <nazwa>    Nazwa pliku wyjsciowego (domyslnie: \"out\")\n"
+        "  -i <liczba>   Liczba iteracji algorytmu (domyslnie: 500)\n"
         "  -f <format>   Format pliku wyjsciowego: \"txt\" lub \"bin\" (domyslnie: \"txt\")\n"
         "  -s <seed>     Ziarno generatora liczb losowych (dla powtarzalnosci wynikow)\n"
         "  -h            Wyswietla dokumentacje\n\n"
@@ -44,6 +45,7 @@ int main(int argc, char *argv[])
     int number = 0;
     int seed = 0;
     int has_seed = 0;
+    int iterations = 500;
 
     for (int i = 1; i < argc; i++)
     {
@@ -72,6 +74,10 @@ int main(int argc, char *argv[])
         {
             seed = atoi(argv[++i]);
             has_seed = 1;
+        }
+        else if (strcmp(argv[i], "-i") == 0 && i + 1 < argc)
+        {
+            iterations = atoi(argv[++i]);
         }
     }
 
@@ -121,11 +127,11 @@ int main(int argc, char *argv[])
 
     if (number == 1) 
     {
-        fruchterman(g, 500);
+        fruchterman(g, iterations);
     }
     else 
     {
-        tutte(g, 500);
+        tutte(g, iterations);
     }
 
     if (save_file(g, output, format) != GRAPH_OK)

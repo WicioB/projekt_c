@@ -38,7 +38,7 @@ void fruchterman(Graph *g, int count)
                 }
             }
         }
-        for(int i=0;i<g->number_of_edges;i++)
+        for(int i=0;i<g->number_of_vertices;i++)
         {
             Vertex *x = &g->vertices[g->edges[i].x];
             Vertex *y = &g->vertices[g->edges[i].y];
@@ -49,7 +49,7 @@ void fruchterman(Graph *g, int count)
             {
                 double pom = (distance * distance) / n;
                 x->dx -= (dx / distance) * pom;
-                x->dy -=(dy/distance);
+                x->dy -=(dy/distance) *pom;
                 y->dx+=(dx/distance)*pom;
                 y->dy+=(dy/distance) * pom;
             }
